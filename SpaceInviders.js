@@ -8,20 +8,19 @@ function blastSequence(aliens,position){
   let finalRow = height_m
   let endGame = false
   let board = createBoard(aliens, height_m, width_n)
-  let modifiedBoard = createEmptyBoard(height_m, width_n)
+  let newBoard = createEmptyBoard(height_m, width_n)
   let totalZeros = getTotalZeros(aliens)
 
   let shipColumn = position[1]
 //   console.log('============== shipColumn', shipColumn)
 //   console.log('=========== board antes')
 //   console.log(board)
-//   console.log('=========== modifiedBoard')
-//   console.log(modifiedBoard)
+//   console.log('=========== newBoard')
+//   console.log(newBoard)
 
   let turns = []
 
   let turn = 0
-  let changeDetected = false
   let lastRowChanged = 0
   let totalAliens = getTotal(aliens)
 
@@ -34,50 +33,50 @@ function blastSequence(aliens,position){
       let originalRow = board[row]
 
       for (let column = 0; column < width_n; column++) {
+        let aliensArray = originalRow[column]
 
-        let originalAlienArray = originalRow[column]
-        for (let k = 0; k < originalAlienArray.length; k++) {
-          let alien = originalAlienArray[k]
-          let nuevaPosicionRow = row
-          let nuevaPosicionColumn = column + alien
+        for (let i = 0; i < aliensArray.length; i++) {
+          let alien = aliensArray[i]
+          let newPositionRow = row
+          let newPositionColumn = column + alien
 
-          if(nuevaPosicionColumn < 0 || nuevaPosicionColumn >= width_n) {
-            nuevaPosicionRow = nuevaPosicionRow + 1
+          if(newPositionColumn < 0 || newPositionColumn >= width_n) {
+            newPositionRow = newPositionRow + 1
 
-            if(nuevaPosicionColumn < 0) {
-              nuevaPosicionColumn = (nuevaPosicionColumn + 1) * -1
+            if(newPositionColumn < 0) {
+              newPositionColumn = (newPositionColumn + 1) * -1
             }
 
 
-            if(nuevaPosicionColumn >= width_n) {
-              let espacioDisponible = width_n - column
-              let restante = alien - espacioDisponible
-              nuevaPosicionColumn = width_n - 1 - restante
+            if(newPositionColumn >= width_n) {
+              let availableSpace = width_n - column
+              let remaining = alien - availableSpace
+              newPositionColumn = width_n - 1 - remaining
             }
 
-            if (nuevaPosicionRow === finalRow) {
+            if (newPositionRow === finalRow) {
               endGame = true
             }
 
             alien = alien * -1
           }
 
-          if (lastRowChanged < nuevaPosicionRow) {
-            lastRowChanged = nuevaPosicionRow
+          if (lastRowChanged < newPositionRow) {
+            lastRowChanged = newPositionRow
 //             console.log('================ lastRowChanged', lastRowChanged)
           }
 
-          modifiedBoard[nuevaPosicionRow][nuevaPosicionColumn].push(alien)
+          newBoard[newPositionRow][newPositionColumn].push(alien)
         }
       }
     }
 
     for (let shipRow = height_m-1; shipRow >= 0; shipRow--) {
-      if(modifiedBoard[shipRow][shipColumn].length !== 0) {
+      if(newBoard[shipRow][shipColumn].length !== 0) {
 
 
-//         console.log('============= Aliens to destroy', modifiedBoard[shipRow][shipColumn])
-        let maxAlien = Math.max.apply(null, modifiedBoard[shipRow][shipColumn].map(Math.abs));
+//         console.log('============= Aliens to destroy', newBoard[shipRow][shipColumn])
+        let maxAlien = Math.max.apply(null, newBoard[shipRow][shipColumn].map(Math.abs));
 //         console.log('============= maxAlien', maxAlien)
 
         if(maxAlien !== 0) {
@@ -86,17 +85,17 @@ function blastSequence(aliens,position){
           // Obtener el valor mayor del array sin importar el signo
           // Verificar si existe el numero en positivo
           // Si no existe el numero en positivo, buscarlo en negativo
-          let positionToEliminate = modifiedBoard[shipRow][shipColumn].findIndex(a => a === maxAlien)
+          let positionToEliminate = newBoard[shipRow][shipColumn].findIndex(a => a === maxAlien)
 //           console.log('================== Position to eliminate UNO: ', positionToEliminate)
 
           if(positionToEliminate === -1){
-            positionToEliminate = modifiedBoard[shipRow][shipColumn].findIndex(a => a === (maxAlien * -1))
+            positionToEliminate = newBoard[shipRow][shipColumn].findIndex(a => a === (maxAlien * -1))
 //             console.log('================== Position to eliminate DOS: ', positionToEliminate)
           }
 //           console.log('================== Position to eliminate FINAL: ', positionToEliminate)
 
-          modifiedBoard[shipRow][shipColumn].splice(positionToEliminate, 1)
-          // modifiedBoard[shipRow][shipColumn] = []
+          newBoard[shipRow][shipColumn].splice(positionToEliminate, 1)
+          // newBoard[shipRow][shipColumn] = []
           turns.push(turn)
 
           console.log('=============== turns', turns)
@@ -106,8 +105,8 @@ function blastSequence(aliens,position){
       }
     }
 
-    board = [...modifiedBoard]
-    modifiedBoard = createEmptyBoard(height_m, width_n)
+    board = [...newBoard]
+    newBoard = createEmptyBoard(height_m, width_n)
 //     console.log('=========== board turn ', turn)
 //     console.log(board)
 //     console.log('================ totalAliens', totalAliens)
