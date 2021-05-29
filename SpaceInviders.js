@@ -5,8 +5,6 @@ function blastSequence(aliens,position){
   let width_n = aliens[0].length
   let height_m = position[0]
 
-  let finalRow = height_m
-  let endGame = false
   let board = createBoard(aliens, height_m, width_n)
   let newBoard = createEmptyBoard(height_m, width_n)
 
@@ -57,16 +55,11 @@ function blastSequence(aliens,position){
               newPositionColumn = width_n - 1 - remaining
             }
 
-            if (newPositionRow === finalRow) {
-              endGame = true
-            }
-
             alien = alien * -1
           }
 
           if (lastRowChanged < newPositionRow) {
             lastRowChanged = newPositionRow
-//             console.log('================ lastRowChanged', lastRowChanged)
           }
 
           newBoard[newPositionRow][newPositionColumn].push(alien)
@@ -119,7 +112,7 @@ function blastSequence(aliens,position){
 
 }
 
-function createBoard(aliens, height_m, width_n) {
+function createBoard(aliens, height, width) {
   let board = []
 
   for(let i = 0; i < aliens.length; i++){
@@ -127,13 +120,8 @@ function createBoard(aliens, height_m, width_n) {
     board.push([...arrayAliens])
   }
 
-
-  for (let y = aliens.length; y <= height_m; y++) {
-    let emptyRow = []
-
-    for (let i = 0; i < width_n; i++) {
-      emptyRow.push([]);
-    }
+  for (let y = aliens.length; y <= height; y++) {
+    let emptyRow = creatEmptyRow(width)
 
     board.push([...emptyRow]);
   }
@@ -141,20 +129,25 @@ function createBoard(aliens, height_m, width_n) {
   return board;
 }
 
-function createEmptyBoard(height_m, width_n) {
+function createEmptyBoard(height, width) {
   let board = []
 
-  for (let y = 0; y <= height_m; y++) {
-    let emptyRow = []
-
-    for (let i = 0; i < width_n; i++) {
-      emptyRow.push([]);
-    }
-
+  for (let y = 0; y <= height; y++) {
+    let emptyRow = creatEmptyRow(width)
     board.push([...emptyRow]);
   }
 
   return board;
+}
+
+function creatEmptyRow(rowWidth) {
+  let emptyRow = []
+
+  for (let i = 0; i < rowWidth; i++) {
+    emptyRow.push([]);
+  }
+
+  return emptyRow;
 }
 
 function flatten(array) {
