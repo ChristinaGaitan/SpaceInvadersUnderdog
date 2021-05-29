@@ -28,6 +28,8 @@ function blastSequence(aliens,position){
 //     console.log('================ totalAliens', totalAliens)
 //     console.log('================ lastRowChanged', lastRowChanged)
 //     console.log('================ height_m', height_m)
+
+    // TODO: Calculate the last row changed without using this variable
     lastRowChanged = 0
     for (let row = 0; row < height_m; row++) {
       let originalRow = board[row]
@@ -80,7 +82,7 @@ function blastSequence(aliens,position){
 //         console.log('============= maxAlien', maxAlien)
 
         if(maxAlien !== 0) {
-          totalAliens = totalAliens - 1
+//           totalAliens = totalAliens - 1
 
           // Obtener el valor mayor del array sin importar el signo
           // Verificar si existe el numero en positivo
@@ -106,11 +108,8 @@ function blastSequence(aliens,position){
     }
 
     board = [...newBoard]
+    totalAliens = flatten(board).length
     newBoard = createEmptyBoard(height_m, width_n)
-//     console.log('=========== board turn ', turn)
-//     console.log(board)
-//     console.log('================ totalAliens', totalAliens)
-
     turn++
   }
 
@@ -177,4 +176,10 @@ function getTotalZeros(aliens) {
   }
   console.log('============= total ceros', total)
   return total;
+}
+
+function flatten(array) {
+  return array.reduce(function (flat, toFlatten) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
 }
