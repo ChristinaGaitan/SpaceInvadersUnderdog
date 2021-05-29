@@ -41,14 +41,16 @@ function blastSequence(aliens,position){
           let newPositionRow = row
           let newPositionColumn = column + alien
 
+          // Alien bajará una columna
           if(newPositionColumn < 0 || newPositionColumn >= width_n) {
             newPositionRow = newPositionRow + 1
 
+            // Alien bajó por la izquierda
             if(newPositionColumn < 0) {
               newPositionColumn = (newPositionColumn + 1) * -1
             }
 
-
+            // Alien bajó por la derecha
             if(newPositionColumn >= width_n) {
               let availableSpace = width_n - column
               let remaining = alien - availableSpace
@@ -67,39 +69,7 @@ function blastSequence(aliens,position){
       }
     }
 
-    for (let shipRow = height_m-1; shipRow >= 0; shipRow--) {
-      if(newBoard[shipRow][shipColumn].length !== 0) {
-
-
-//         console.log('============= Aliens to destroy', newBoard[shipRow][shipColumn])
-        let maxAlien = Math.max.apply(null, newBoard[shipRow][shipColumn].map(Math.abs));
-//         console.log('============= maxAlien', maxAlien)
-
-        if(maxAlien !== 0) {
-//           totalAliens = totalAliens - 1
-
-          // Obtener el valor mayor del array sin importar el signo
-          // Verificar si existe el numero en positivo
-          // Si no existe el numero en positivo, buscarlo en negativo
-          let positionToEliminate = newBoard[shipRow][shipColumn].findIndex(a => a === maxAlien)
-//           console.log('================== Position to eliminate UNO: ', positionToEliminate)
-
-          if(positionToEliminate === -1){
-            positionToEliminate = newBoard[shipRow][shipColumn].findIndex(a => a === (maxAlien * -1))
-//             console.log('================== Position to eliminate DOS: ', positionToEliminate)
-          }
-//           console.log('================== Position to eliminate FINAL: ', positionToEliminate)
-
-          newBoard[shipRow][shipColumn].splice(positionToEliminate, 1)
-          // newBoard[shipRow][shipColumn] = []
-          turns.push(turn)
-
-          console.log('=============== turns', turns)
-          break;
-        }
-
-      }
-    }
+    alienDeleted(newBoard,lastRowChanged, shipColumn) ? turns.push(turn) : null
 
     board = [...newBoard]
     totalAliens = flatten(board).length
@@ -154,4 +124,36 @@ function flatten(array) {
   return array.reduce(function (flat, toFlatten) {
     return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
   }, []);
+}
+
+function alienDeleted(newBoard, lastRowChanged, shipColumn) {
+  for (let shipRow = lastRowChanged; shipRow >= 0; shipRow--) {
+    let boardRow = newBoard[shipRow][shipColumn]
+
+    if(boardRow.length !== 0) {
+
+      // Obtener el valor máximo absoluto
+      let maxAlien = Math.max.apply(null, boardRow.map(Math.abs));
+
+      // Cuando hay un 0 en el blanco no cuenta el tiro
+      if(maxAlien !== 0) {
+
+        // Obtener el index del valor máximo absoluto
+        let positionToEliminate = boardRow.findIndex(a => a === maxAlien)
+
+        // Si no se encuentra el valor en positivo, buscar el indice del número en negativo
+        if(positionToEliminate === -1){
+          positionToEliminate = boardRow.findIndex(a => a === (maxAlien * -1))
+        }
+
+        // Eliminar el alien del board
+        boardRow.splice(positionToEliminate, 1)
+
+        return true
+      }
+
+    }
+  }
+
+  return false
 }
