@@ -6,6 +6,7 @@ function blastSequence(aliens,position){
   let endGame = false
   let board = createBoard(aliens, height_m, width_n)
   let modifiedBoard = createEmptyBoard(height_m, width_n)
+  let totalZeros = getTotalZeros(aliens)
 
   let shipColumn = position[1]
 //   console.log('============== shipColumn', shipColumn)
@@ -21,7 +22,10 @@ function blastSequence(aliens,position){
   let lastRowChanged = 0
   let totalAliens = getTotal(aliens)
 
-  while (totalAliens !== 0 && lastRowChanged !== height_m) {
+  while ((totalAliens !== 0 && totalAliens !== totalZeros) && lastRowChanged !== height_m) {
+//     console.log('================ totalAliens', totalAliens)
+//     console.log('================ lastRowChanged', lastRowChanged)
+//     console.log('================ height_m', height_m)
     lastRowChanged = 0
     for (let row = 0; row < height_m; row++) {
       let originalRow = board[row]
@@ -84,6 +88,8 @@ function blastSequence(aliens,position){
         modifiedBoard[shipRow][shipColumn].splice(modifiedBoard[shipRow][shipColumn].findIndex(a => a === maxAlien), 1)
         // modifiedBoard[shipRow][shipColumn] = []
         turns.push(turn)
+
+        console.log('=============== turns', turns)
         break;
       }
     }
@@ -103,11 +109,15 @@ function blastSequence(aliens,position){
 }
 
 function createBoard(aliens, height_m, width_n) {
-  let arrayAliens = aliens[0].map(alien => [alien]);
   let board = []
-  board.push([...arrayAliens])
 
-  for (let y = 1; y <= height_m; y++) {
+  for(let i = 0; i < aliens.length; i++){
+    let arrayAliens = aliens[i].map(alien => [alien]);
+    board.push([...arrayAliens])
+  }
+
+
+  for (let y = aliens.length; y <= height_m; y++) {
     let emptyRow = []
 
     for (let i = 0; i < width_n; i++) {
@@ -138,7 +148,22 @@ function createEmptyBoard(height_m, width_n) {
 
 function getTotal(aliens) {
   let total = 0;
-  total = aliens[0].length;
+  for(let i = 0; i < aliens.length; i++){
+    total = total + aliens[i].length;
+  }
+  console.log('============= total aliens', total)
+  return total;
+}
 
+function getTotalZeros(aliens) {
+  let total = 0;
+  for(let i = 0; i < aliens.length; i++){
+    for(let j = 0; j < aliens[i].length; j++){
+      if(aliens[i][j] === 0) {
+        total++;
+      }
+    }
+  }
+  console.log('============= total ceros', total)
   return total;
 }
