@@ -75,29 +75,34 @@ function blastSequence(aliens,position){
     for (let shipRow = height_m-1; shipRow >= 0; shipRow--) {
       if(modifiedBoard[shipRow][shipColumn].length !== 0) {
 
-        totalAliens = totalAliens - 1
 
-        console.log('============= Aliens to destroy', modifiedBoard[shipRow][shipColumn])
+//         console.log('============= Aliens to destroy', modifiedBoard[shipRow][shipColumn])
         let maxAlien = Math.max.apply(null, modifiedBoard[shipRow][shipColumn].map(Math.abs));
-        console.log('============= maxAlien', maxAlien)
+//         console.log('============= maxAlien', maxAlien)
 
-        // Obtener el valor mayor del array sin importar el signo
-        // Verificar si existe el numero en positivo
-        // Si no existe el numero en positivo, buscarlo en negativo
-        let positionToEliminate = modifiedBoard[shipRow][shipColumn].findIndex(a => a === maxAlien)
-        console.log('================== Position to eliminate UNO: ', positionToEliminate)
+        if(maxAlien !== 0) {
+          totalAliens = totalAliens - 1
 
-        if(positionToEliminate === -1){
-          positionToEliminate = modifiedBoard[shipRow][shipColumn].findIndex(a => a === (maxAlien * -1))
-          console.log('================== Position to eliminate DOS: ', positionToEliminate)
+          // Obtener el valor mayor del array sin importar el signo
+          // Verificar si existe el numero en positivo
+          // Si no existe el numero en positivo, buscarlo en negativo
+          let positionToEliminate = modifiedBoard[shipRow][shipColumn].findIndex(a => a === maxAlien)
+//           console.log('================== Position to eliminate UNO: ', positionToEliminate)
+
+          if(positionToEliminate === -1){
+            positionToEliminate = modifiedBoard[shipRow][shipColumn].findIndex(a => a === (maxAlien * -1))
+//             console.log('================== Position to eliminate DOS: ', positionToEliminate)
+          }
+//           console.log('================== Position to eliminate FINAL: ', positionToEliminate)
+
+          modifiedBoard[shipRow][shipColumn].splice(positionToEliminate, 1)
+          // modifiedBoard[shipRow][shipColumn] = []
+          turns.push(turn)
+
+          console.log('=============== turns', turns)
+          break;
         }
 
-        modifiedBoard[shipRow][shipColumn].splice(positionToEliminate, 1)
-        // modifiedBoard[shipRow][shipColumn] = []
-        turns.push(turn)
-
-        console.log('=============== turns', turns)
-        break;
       }
     }
 
@@ -111,7 +116,7 @@ function blastSequence(aliens,position){
   }
 
 
-  return turns.length > 0 ? turns : null
+  return lastRowChanged === height_m ? null : turns
 
 }
 
