@@ -72,18 +72,9 @@ function blastSequence(aliens,position){
     for (let shipRow = height_m-1; shipRow >= 0; shipRow--) {
       if(modifiedBoard[shipRow][shipColumn].length !== 0) {
 
-//         In the event where multiple alien ships occupy the same position and
-//         the position is the target of your cannon fire,
-//         the fastest alien ship will be destroyed.
-
-//         If two ships are going at the same speed in opposite directions,
-//         the ship moving to the right will be destroyed.
-
-//         console.log('============ modifiedBoard[shipRow][shipColumn] ',  modifiedBoard[shipRow][shipColumn])
-
         totalAliens = totalAliens - 1
 
-        maxAlien = Math.max(...modifiedBoard[shipRow][shipColumn])
+        let maxAlien = Math.max.apply(null, modifiedBoard[shipRow][shipColumn].map(Math.abs));
 
         modifiedBoard[shipRow][shipColumn].splice(modifiedBoard[shipRow][shipColumn].findIndex(a => a === maxAlien), 1)
         // modifiedBoard[shipRow][shipColumn] = []
@@ -104,7 +95,7 @@ function blastSequence(aliens,position){
   }
 
 
-  return turns
+  return turns.length > 0 ? turns : null
 
 }
 
