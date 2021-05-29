@@ -1,4 +1,7 @@
 function blastSequence(aliens,position){
+  console.log('======== Aliens', aliens)
+  console.log('======== position', position)
+
   let width_n = aliens[0].length
   let height_m = position[0]
 
@@ -10,8 +13,8 @@ function blastSequence(aliens,position){
 
   let shipColumn = position[1]
 //   console.log('============== shipColumn', shipColumn)
-  console.log('=========== board antes')
-  console.log(board)
+//   console.log('=========== board antes')
+//   console.log(board)
 //   console.log('=========== modifiedBoard')
 //   console.log(modifiedBoard)
 
@@ -74,9 +77,22 @@ function blastSequence(aliens,position){
 
         totalAliens = totalAliens - 1
 
+        console.log('============= Aliens to destroy', modifiedBoard[shipRow][shipColumn])
         let maxAlien = Math.max.apply(null, modifiedBoard[shipRow][shipColumn].map(Math.abs));
+        console.log('============= maxAlien', maxAlien)
 
-        modifiedBoard[shipRow][shipColumn].splice(modifiedBoard[shipRow][shipColumn].findIndex(a => a === maxAlien), 1)
+        // Obtener el valor mayor del array sin importar el signo
+        // Verificar si existe el numero en positivo
+        // Si no existe el numero en positivo, buscarlo en negativo
+        let positionToEliminate = modifiedBoard[shipRow][shipColumn].findIndex(a => a === maxAlien)
+        console.log('================== Position to eliminate UNO: ', positionToEliminate)
+
+        if(positionToEliminate === -1){
+          positionToEliminate = modifiedBoard[shipRow][shipColumn].findIndex(a => a === (maxAlien * -1))
+          console.log('================== Position to eliminate DOS: ', positionToEliminate)
+        }
+
+        modifiedBoard[shipRow][shipColumn].splice(positionToEliminate, 1)
         // modifiedBoard[shipRow][shipColumn] = []
         turns.push(turn)
 
@@ -87,8 +103,8 @@ function blastSequence(aliens,position){
 
     board = [...modifiedBoard]
     modifiedBoard = createEmptyBoard(height_m, width_n)
-    console.log('=========== board turn ', turn)
-    console.log(board)
+//     console.log('=========== board turn ', turn)
+//     console.log(board)
 //     console.log('================ totalAliens', totalAliens)
 
     turn++
