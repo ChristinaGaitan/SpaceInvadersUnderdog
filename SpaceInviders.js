@@ -76,8 +76,13 @@ function blastSequence(aliens,position){
 //         the ship moving to the right will be destroyed.
 
 //         console.log('============ modifiedBoard[shipRow][shipColumn] ',  modifiedBoard[shipRow][shipColumn])
-        totalAliens = totalAliens - modifiedBoard[shipRow][shipColumn].length
-        modifiedBoard[shipRow][shipColumn] = []
+
+        totalAliens = totalAliens - 1
+
+        maxAlien = Math.max(...modifiedBoard[shipRow][shipColumn])
+
+        modifiedBoard[shipRow][shipColumn].splice(modifiedBoard[shipRow][shipColumn].findIndex(a => a === maxAlien), 1)
+        // modifiedBoard[shipRow][shipColumn] = []
         turns.push(turn)
         break;
       }
