@@ -9,20 +9,21 @@ function blastSequence(aliens,position){
   let endGame = false
   let board = createBoard(aliens, height_m, width_n)
   let newBoard = createEmptyBoard(height_m, width_n)
-  let totalZeros = getTotalZeros(aliens)
+
+  let flattenAliens = flatten(aliens)
+  let totalAliens = flattenAliens.length
+  let totalZeros = flattenAliens.filter(value => value === 0).length
+
 
   let shipColumn = position[1]
 //   console.log('============== shipColumn', shipColumn)
 //   console.log('=========== board antes')
 //   console.log(board)
-//   console.log('=========== newBoard')
-//   console.log(newBoard)
 
-  let turns = []
 
   let turn = 0
+  let turns = []
   let lastRowChanged = 0
-  let totalAliens = getTotal(aliens)
 
   while ((totalAliens !== 0 && totalAliens !== totalZeros) && lastRowChanged !== height_m) {
 //     console.log('================ totalAliens', totalAliens)
@@ -154,28 +155,6 @@ function createEmptyBoard(height_m, width_n) {
   }
 
   return board;
-}
-
-function getTotal(aliens) {
-  let total = 0;
-  for(let i = 0; i < aliens.length; i++){
-    total = total + aliens[i].length;
-  }
-  console.log('============= total aliens', total)
-  return total;
-}
-
-function getTotalZeros(aliens) {
-  let total = 0;
-  for(let i = 0; i < aliens.length; i++){
-    for(let j = 0; j < aliens[i].length; j++){
-      if(aliens[i][j] === 0) {
-        total++;
-      }
-    }
-  }
-  console.log('============= total ceros', total)
-  return total;
 }
 
 function flatten(array) {
