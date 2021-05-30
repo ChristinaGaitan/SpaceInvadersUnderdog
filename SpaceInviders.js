@@ -18,7 +18,6 @@ function blastSequence(aliens,position){
   console.log('=========== board antes')
   console.log(board)
 
-
   let turn = 0
   let turns = []
   let lastRowChanged = 0
@@ -45,14 +44,14 @@ function blastSequence(aliens,position){
 
             // Alien bajó por la izquierda
             if(newPositionColumn < 0) {
-              newPositionColumn = (newPositionColumn + 1) * -1
+              newPositionColumn = (newPositionColumn * -1) - 1
             }
 
             // Alien bajó por la derecha
             if(newPositionColumn >= width_n) {
-              let availableSpace = width_n - column
+              let availableSpace = (width_n - 1) - column
               let remaining = alien - availableSpace
-              newPositionColumn = width_n - 1 - remaining
+              newPositionColumn = width_n - remaining
             }
 
             alien = alien * -1
