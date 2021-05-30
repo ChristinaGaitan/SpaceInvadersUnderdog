@@ -2,11 +2,11 @@ function blastSequence(aliens,position){
   console.log('======== Aliens', aliens)
   console.log('======== position', position)
 
-  let width_n = aliens[0].length
-  let height_m = position[0]
+  let boardWidth = aliens[0].length
+  let boardHeight = position[0]
 
-  let board = createBoard(aliens, height_m, width_n)
-  let newBoard = createEmptyBoard(height_m, width_n)
+  let board = createBoard(aliens, boardHeight, boardWidth)
+  let newBoard = createEmptyBoard(boardHeight, boardWidth)
 
   let flattenAliens = flatten(aliens)
   let totalAliens = flattenAliens.length
@@ -22,46 +22,46 @@ function blastSequence(aliens,position){
   let turns = []
   let lastRowChanged = 0
 
-  while ((totalAliens !== 0 && totalAliens !== totalZeros) && lastRowChanged !== height_m) {
+  while ((totalAliens !== 0 && totalAliens !== totalZeros) && lastRowChanged !== boardHeight) {
 //     console.log('================ totalAliens', totalAliens)
 //     console.log('================ lastRowChanged', lastRowChanged)
-//     console.log('================ height_m', height_m)
+//     console.log('================ boardHeight', boardHeight)
 
     lastRowChanged = 0
-    for (let row = 0; row < height_m; row++) {
+    for (let row = 0; row < boardHeight; row++) {
       let originalRow = board[row]
 
-      for (let column = 0; column < width_n; column++) {
+      for (let column = 0; column < boardWidth; column++) {
         let aliensArray = originalRow[column]
 
         aliensArray.forEach(alien => {
-          let newPositionRow = row
-          let newPositionColumn = column + alien
+          let newRow = row
+          let newColumn = column + alien
 
           // Alien bajará una fila
-          if(newPositionColumn < 0 || newPositionColumn >= width_n) {
-            newPositionRow = newPositionRow + 1
+          if(newColumn < 0 || newColumn >= boardWidth) {
+            newRow = newRow + 1
 
             // Alien bajó por la izquierda
-            if(newPositionColumn < 0) {
-              newPositionColumn = (newPositionColumn * -1) - 1
+            if(newColumn < 0) {
+              newColumn = (newColumn * -1) - 1
             }
 
             // Alien bajó por la derecha
-            if(newPositionColumn >= width_n) {
-              let availableSpace = (width_n - 1) - column
+            if(newColumn >= boardWidth) {
+              let availableSpace = (boardWidth - 1) - column
               let remaining = alien - availableSpace
-              newPositionColumn = width_n - remaining
+              newColumn = boardWidth - remaining
             }
 
             alien = alien * -1
           }
 
-          if (lastRowChanged < newPositionRow) {
-            lastRowChanged = newPositionRow
+          if (lastRowChanged < newRow) {
+            lastRowChanged = newRow
           }
 
-          newBoard[newPositionRow][newPositionColumn].push(alien)
+          newBoard[newRow][newColumn].push(alien)
         })
       }
     }
@@ -70,13 +70,12 @@ function blastSequence(aliens,position){
 
     board = [...newBoard]
     totalAliens = flatten(board).length
-    newBoard = createEmptyBoard(height_m, width_n)
+    newBoard = createEmptyBoard(boardHeight, boardWidth)
     turn++
   }
 
 
-  return lastRowChanged === height_m ? null : turns
-
+  return lastRowChanged === boardHeight ? null : turns
 }
 
 function createBoard(aliens, height, width) {
