@@ -15,8 +15,8 @@ function blastSequence(aliens,position){
 
   let shipColumn = position[1]
 //   console.log('============== shipColumn', shipColumn)
-//   console.log('=========== board antes')
-//   console.log(board)
+  console.log('=========== board antes')
+  console.log(board)
 
 
   let turn = 0
@@ -28,7 +28,6 @@ function blastSequence(aliens,position){
 //     console.log('================ lastRowChanged', lastRowChanged)
 //     console.log('================ height_m', height_m)
 
-    // TODO: Calculate the last row changed without using this variable
     lastRowChanged = 0
     for (let row = 0; row < height_m; row++) {
       let originalRow = board[row]
@@ -36,12 +35,11 @@ function blastSequence(aliens,position){
       for (let column = 0; column < width_n; column++) {
         let aliensArray = originalRow[column]
 
-        for (let i = 0; i < aliensArray.length; i++) {
-          let alien = aliensArray[i]
+        aliensArray.forEach(alien => {
           let newPositionRow = row
           let newPositionColumn = column + alien
 
-          // Alien bajará una columna
+          // Alien bajará una fila
           if(newPositionColumn < 0 || newPositionColumn >= width_n) {
             newPositionRow = newPositionRow + 1
 
@@ -65,7 +63,7 @@ function blastSequence(aliens,position){
           }
 
           newBoard[newPositionRow][newPositionColumn].push(alien)
-        }
+        })
       }
     }
 
@@ -85,13 +83,13 @@ function blastSequence(aliens,position){
 function createBoard(aliens, height, width) {
   let board = []
 
-  for(let i = 0; i < aliens.length; i++){
-    let arrayAliens = aliens[i].map(alien => [alien]);
+  aliens.forEach(aliensRow => {
+    let arrayAliens = aliensRow.map(alien => [alien]);
     board.push([...arrayAliens])
-  }
+  })
 
   for (let y = aliens.length; y <= height; y++) {
-    let emptyRow = creatEmptyRow(width)
+    let emptyRow = createEmptyRow(width)
 
     board.push([...emptyRow]);
   }
@@ -103,14 +101,14 @@ function createEmptyBoard(height, width) {
   let board = []
 
   for (let y = 0; y <= height; y++) {
-    let emptyRow = creatEmptyRow(width)
+    let emptyRow = createEmptyRow(width)
     board.push([...emptyRow]);
   }
 
   return board;
 }
 
-function creatEmptyRow(rowWidth) {
+function createEmptyRow(rowWidth) {
   let emptyRow = []
 
   for (let i = 0; i < rowWidth; i++) {
@@ -130,29 +128,28 @@ function alienDeleted(newBoard, lastRowChanged, shipColumn) {
   for (let shipRow = lastRowChanged; shipRow >= 0; shipRow--) {
     let boardRow = newBoard[shipRow][shipColumn]
 
-    if(boardRow.length !== 0) {
+    if(boardRow.length === 0) continue;
 
-      // Obtener el valor máximo absoluto
-      let maxAlien = Math.max.apply(null, boardRow.map(Math.abs));
+    // Obtener el valor máximo absoluto
+    let maxAlien = Math.max.apply(null, boardRow.map(Math.abs));
 
-      // Cuando hay un 0 en el blanco no cuenta el tiro
-      if(maxAlien !== 0) {
+    // Cuando hay un 0 en el blanco no cuenta el tiro
+    if(maxAlien !== 0) {
 
-        // Obtener el index del valor máximo absoluto
-        let positionToEliminate = boardRow.findIndex(a => a === maxAlien)
+      // Obtener el index del valor máximo absoluto
+      let positionToEliminate = boardRow.findIndex(a => a === maxAlien)
 
-        // Si no se encuentra el valor en positivo, buscar el indice del número en negativo
-        if(positionToEliminate === -1){
-          positionToEliminate = boardRow.findIndex(a => a === (maxAlien * -1))
-        }
-
-        // Eliminar el alien del board
-        boardRow.splice(positionToEliminate, 1)
-
-        return true
+      // Si no se encuentra el valor en positivo, buscar el indice del número en negativo
+      if(positionToEliminate === -1){
+        positionToEliminate = boardRow.findIndex(a => a === (maxAlien * -1))
       }
 
+      // Eliminar el alien del board
+      boardRow.splice(positionToEliminate, 1)
+
+      return true
     }
+
   }
 
   return false
