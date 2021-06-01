@@ -1,7 +1,4 @@
 function blastSequence(aliens,position){
-  console.log('======== Aliens', aliens)
-  console.log('======== position', position)
-
   let boardWidth = aliens[0].length
   let boardHeight = position[0]
 
@@ -12,22 +9,15 @@ function blastSequence(aliens,position){
   let totalAliens = flattenAliens.length
   let totalZeros = flattenAliens.filter(value => value === 0).length
 
-
   let shipColumn = position[1]
-//   console.log('============== shipColumn', shipColumn)
-  console.log('=========== board antes')
-  console.log(board)
 
   let turn = 0
   let turns = []
   let lastRowChanged = 0
 
   while ((totalAliens !== 0 && totalAliens !== totalZeros) && lastRowChanged !== boardHeight) {
-//     console.log('================ totalAliens', totalAliens)
-//     console.log('================ lastRowChanged', lastRowChanged)
-//     console.log('================ boardHeight', boardHeight)
-
     lastRowChanged = 0
+
     for (let row = 0; row < boardHeight; row++) {
       let originalRow = board[row]
 
@@ -116,12 +106,6 @@ function createEmptyRow(rowWidth) {
   return emptyRow;
 }
 
-function flatten(array) {
-  return array.reduce(function (flat, toFlatten) {
-    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-  }, []);
-}
-
 function alienDeleted(newBoard, lastRowChanged, shipColumn) {
   for (let shipRow = lastRowChanged; shipRow >= 0; shipRow--) {
     let boardRow = newBoard[shipRow][shipColumn]
@@ -151,4 +135,10 @@ function alienDeleted(newBoard, lastRowChanged, shipColumn) {
   }
 
   return false
+}
+
+function flatten(array) {
+  return array.reduce(function (flat, toFlatten) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
 }
